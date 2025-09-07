@@ -1,0 +1,17 @@
+@inproceedings{Peng2024LDStega,
+author = {Peng, Yinyin and Wang, Yaofei and Hu, Donghui and Chen, Kejiang and Rong, Xianjin and Zhang, Weiming},
+title = {LDStega: Practical and Robust Generative Image Steganography based on Latent Diffusion Models},
+year = {2024},
+isbn = {9798400706868},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3664647.3681635},
+doi = {10.1145/3664647.3681635},
+abstract = {Generative image steganography has gained significant attention due to its ability to hide secret data during image generation. However, existing generative image steganography methods still face challenges in terms of controllability, usability, and robustness, making it difficult to apply real-world scenarios. We propose a practical and robust generative image steganography based on Latent Diffusion Models, called LDStega. LDStega takes controllable condition text as input and designs an encoding strategy in the reverse process of the Latent Diffusion Models to couple latent space generation with data hiding. The encoding strategy selects a sampling interval from a candidate pool of truncated Gaussian distributions guided by secret data to generate the stego latent space. Subsequently, the stego latent space is fed into the Decoder to generate the stego image. The receiver extracts the secret data from the globally Gaussian distribution of the lossy-reconstructed latent space in the reverse process. Experimental results demonstrate that LDStega achieves high extraction accuracy while controllably generating image content and saving the stego image in the widely used PNG and JPEG formats. Additionally, LDStega outperforms state-of-the-art techniques in resisting common image attacks.},
+booktitle = {Proceedings of the 32nd ACM International Conference on Multimedia},
+pages = {3001–3009},
+numpages = {9},
+keywords = {data hiding, image steganography, latent diffusion model},
+location = {Melbourne VIC, Australia},
+series = {MM '24}
+}

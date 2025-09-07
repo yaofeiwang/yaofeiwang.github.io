@@ -1,0 +1,54 @@
+.section-container {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #eee;
+  margin-bottom: 1.5rem;
+}
+
+.section-container:last-child {
+  border-bottom: none;
+}
+
+.section-title {
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--global-border-color, #333);
+  color: var(--global-text-color, #333);
+}
+
+/* 平滑滚动的动画效果 */
+html {
+  scroll-behavior: smooth;
+}
+
+/* 为各部分添加一些间距和过渡效果 */
+#about-me,
+#publications,
+#educations,
+#professional-activities {
+  scroll-margin-top: 80px; /* 为固定导航栏留出空间 */
+  opacity: 1; /* 默认显示内容 */
+  transition: opacity 0.5s ease;
+}
+
+/* 为h2标题添加样式，确保标题显示 */
+.page__content h2 {
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--global-border-color, #333);
+  color: var(--global-text-color, #333);
+  margin-top: 0.5rem; /* 减小标题上方的间距 */
+  display: block; /* 确保元素显示 */
+  visibility: visible; /* 确保元素可见 */
+  opacity: 1; /* 确保元素不透明 */
+}
+
+/* 当元素进入视口时显示 */
+#about-me.visible,
+#publications.visible,
+#educations.visible,
+#professional-activities.visible {
+  opacity: 1;
+  transform: translateY(0);
+}

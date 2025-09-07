@@ -1,0 +1,15 @@
+<!-- BibTeX Citation Modal Component -->
+<div id="bibtex-modal" style="display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5);">
+  <div style="background-color: white; margin: 15% auto; padding: 20px; border-radius: 8px; width: 80%; max-width: 600px; max-height: 70vh; overflow-y: auto;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+      <div style="display: flex; align-items: center;">
+        <h3 style="margin: 0;">BibTeX Citation</h3>
+        <button onclick="copyBibtexFromModal()" style="margin-left: 10px; padding: 5px 10px; background-color: #34a853; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 0.9em;">
+          Copy
+        </button>
+      </div>
+      <button onclick="document.getElementById('bibtex-modal').style.display='none'" style="background: none; border: none; font-size: 1.5em; cursor: pointer;">×</button>
+    </div>
+    <pre id="bibtex-content" style="background-color: #f5f5f5; padding: 15px; border-radius: 4px; white-space: pre-wrap; word-wrap: break-word;"></pre>
+  </div>
+</div>

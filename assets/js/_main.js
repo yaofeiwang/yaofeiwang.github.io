@@ -2,51 +2,6 @@
    Various functions that we want to use within the template
    ========================================================================== */
 
-// Determine the expected state of the theme toggle, which can be "dark", "light", or
-// "system". Default is "system".
-let determineThemeSetting = () => {
-  let themeSetting = localStorage.getItem("theme");
-  return (themeSetting != "dark" && themeSetting != "light" && themeSetting != "system") ? "system" : themeSetting;
-};
-
-// Determine the computed theme, which can be "dark" or "light". If the theme setting is
-// "system", the computed theme is determined based on the user's system preference.
-let determineComputedTheme = () => {
-  let themeSetting = determineThemeSetting();
-  if (themeSetting != "system") {
-    return themeSetting;
-  }
-  return (userPref && userPref("(prefers-color-scheme: dark)").matches) ? "dark" : "light";
-};
-
-// detect OS/browser preference
-const browserPref = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-
-// Set the theme on page load or when explicitly called
-let setTheme = (theme) => {
-  const use_theme =
-    theme ||
-    localStorage.getItem("theme") ||
-    $("html").attr("data-theme") ||
-    browserPref;
-
-  if (use_theme === "dark") {
-    $("html").attr("data-theme", "dark");
-    $("#theme-icon").removeClass("fa-sun").addClass("fa-moon");
-  } else if (use_theme === "light") {
-    $("html").removeAttr("data-theme");
-    $("#theme-icon").removeClass("fa-moon").addClass("fa-sun");
-  }
-};
-
-// Toggle the theme manually
-var toggleTheme = () => {
-  const current_theme = $("html").attr("data-theme");
-  const new_theme = current_theme === "dark" ? "light" : "dark";
-  localStorage.setItem("theme", new_theme);
-  setTheme(new_theme);
-};
-
 /* ==========================================================================
    Plotly integration script so that Markdown codeblocks will be rendered
    ========================================================================== */
@@ -93,14 +48,17 @@ $(document).ready(function () {
   // If the user hasn't chosen a theme, follow the OS preference
   setTheme();
   window.matchMedia('(prefers-color-scheme: dark)')
-        .addEventListener("change", (e) => {
-          if (!localStorage.getItem("theme")) {
-            setTheme(e.matches ? "dark" : "light");
-          }
-        });
 
-  // Enable the theme toggle
-  $('#theme-toggle').on('click', toggleTheme);
+
+  // 注释掉导航菜单按钮的事件监听器，因为按钮已被注释掉
+  /*
+  // Enable the navigation menu toggle - using event delegation for better reliability
+  $(document).on('click', '.greedy-nav button', function() {
+    console.log('Navigation menu button clicked');
+    $('.greedy-nav ul.hidden-links').toggleClass('hidden');
+    $(this).toggleClass('open');
+  });
+  */
 
   // Enable the sticky footer
   var bumpIt = function () {
@@ -134,9 +92,91 @@ $(document).ready(function () {
   });
 
   // Init smooth scroll, this needs to be slightly more than then fixed masthead height
-  $("a").smoothScroll({
-    offset: -scssMastheadHeight,
-    preventDefault: false,
+  $("a").smoothScroll({ offset: -scssMastheadHeight, preventDefault: false, });
+
+  // 元素进入视口时的淡入效果
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, {
+    threshold: 0.1
+  });
+
+  // 观察所有的section元素
+  document.querySelectorAll('#about-me, #publications, #educations, #professional-activities').forEach(section => {
+    observer.observe(section);
+  });
+
+  // 防止点击导航链接后页面跳转
+  document.querySelectorAll('#site-nav a[href^="/#"]').forEach(link => {
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+      const targetId = this.getAttribute('href').substring(1);
+      const targetElement = document.getElementById(targetId);
+      
+      if (targetElement) {
+        window.scrollTo({
+          top: targetElement.offsetTop - scssMastheadHeight,
+          behavior: 'smooth'
+        });
+        
+        // 在移动设备上点击导航链接后关闭菜单
+        if ($(window).width() < scssLarge) {
+          $('.navicon').click();
+        }
+      }
+    });
+  });
+
+  // BibTeX弹窗功能
+  window.showBibtexModal = function(bibPath) {
+    fetch(bibPath)
+      .then(response => response.text())
+      .then(text => {
+        document.getElementById('bibtex-content').textContent = text;
+        document.getElementById('bibtex-modal').style.display = 'block';
+      })
+      .catch(err => {
+        console.error('获取BibTeX失败:', err);
+        alert('无法加载BibTeX内容');
+      });
+  };
+
+  window.copyBibtexFromModal = function() {
+    const bibtex = document.getElementById('bibtex-content').textContent;
+    navigator.clipboard.writeText(bibtex).then(() => {
+      alert('BibTeX已复制到剪贴板！');
+    }).catch(err => {
+      console.error('复制BibTeX失败:', err);
+      alert('复制失败，请手动复制。');
+    });
+  };
+
+  // 复制BibTeX功能（旧版）
+  document.querySelectorAll('.copy-bibtex-btn').forEach(button => {
+    button.addEventListener('click', function() {
+      const bibtexId = this.getAttribute('data-bibtex-id');
+      const bibtexElement = document.getElementById(bibtexId);
+      
+      if (bibtexElement) {
+        const bibtexText = bibtexElement.textContent;
+        navigator.clipboard.writeText(bibtexText).then(() => {
+          // 显示成功提示
+          const successMessage = this.parentElement.querySelector('.copy-success');
+          if (successMessage) {
+            successMessage.style.display = 'inline';
+            setTimeout(() => {
+              successMessage.style.display = 'none';
+            }, 2000);
+          }
+        }).catch(err => {
+          console.error('复制失败:', err);
+        });
+      }
+    });
   });
 
 });
